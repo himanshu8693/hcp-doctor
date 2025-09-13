@@ -1,88 +1,146 @@
+# Running from a Downloaded Binary Release
 
-# HashiCorp Doctor
+If you downloaded a release from the GitHub Releases page and it contains a file named `hcp-doctor-linux`, `hcp-doctor-macos`, or `hcp-doctor-windows.exe`, you can run the tool directly without installing Python or any dependencies.
 
+## Steps to Run the Binary
 
-HashiCorp Doctor is a diagnostics and troubleshooting tool for HashiCorp products: Vault, Consul, and Nomad.
-You can use it as a standalone binary (no Python required) or as a Python CLI/Web UI tool.
+1. **Download the correct binary for your OS from the GitHub Release assets:**
+	- Linux: `hcp-doctor-linux`
+	- macOS: `hcp-doctor-macos`
+	- Windows: `hcp-doctor-windows.exe`
 
-## Features
-- **Vault:** Seal/unseal status, leader election, replication, license, token/lease health, config validation, raft/autopilot state.
-- **Consul:** Cluster state, raft peers, autopilot, gossip, leader, catalog, envoy, ACLs.
-- **Nomad:** Autopilot, leader, scheduler, jobs, plugins.
-- **General:** Upgrade pre-checks, snapshot validation, resource utilization.
-- **HTML Report:** Generate and download a comprehensive HTML diagnostics report from CLI or Web UI.
+2. **(Linux/macOS only) Make the binary executable:**
+	```sh
+	chmod +x ./hcp-doctor-linux   # or ./hcp-doctor-macos
+	```
 
+3. **Run the tool:**
+	- **Linux/macOS:**
+	  ```sh
+	  ./hcp-doctor-linux doctor --profile=dev
+	  # or for macOS
+	  ./hcp-doctor-macos doctor --profile=dev
+	  ```
+	- **Windows:**
+	  ```sh
+	  hcp-doctor-windows.exe doctor --profile=dev
+	  ```
 
-## Quick Start (Recommended)
+4. **(Optional) Set environment variables for cluster access:**
+	```sh
+	export VAULT_ADDR=http://your-vault:8200
+	export VAULT_TOKEN=your-root-token
+	export CONSUL_HTTP_ADDR=https://your-consul:8501
+	export CONSUL_HTTP_TOKEN=your-consul-token
+	export NOMAD_ADDR=http://your-nomad:4646
+	export NOMAD_TOKEN=your-nomad-token
+	```
+	Or pass them as CLI arguments (see below).
 
-### 1. Download the Binary
-
-Go to the [Releases page](https://github.com/your-username/hcp-doctor/releases) and download the binary for your OS and architecture:
-
-- **macOS:** `hcp-doctor-mac`
-- **Linux:** `hcp-doctor-linux`
-- **Windows:** `hcp-doctor-win.exe`
-
-### 2. Run the Tool
-
-Make the binary executable (macOS/Linux):
-
-```bash
-chmod +x hcp-doctor-<platform>
-./hcp-doctor-<platform> doctor
-```
-
-On Windows, just double-click or run in Command Prompt:
-
-```
-hcp-doctor-win.exe doctor
-```
-
-You can use all CLI options and the web UI as described below.
+5. **You should see cluster health and diagnostics output in your terminal.**
 
 ---
 
-## Alternative: Python Virtual Environment
+**Note:** If you downloaded a `.zip` file containing the source code (not a single binary), follow the instructions in the "Usage" section above to install Python and run the tool from source.
 
-If you prefer, you can still use the Python version:
+# HCP Doctor
 
-```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+A CLI tool to automate collection and analysis of Vault, Consul, and Nomad cluster health.
+
+## Features
+
+## Usage
+
+
+```sh
 pip install -r requirements.txt
+source .venv/bin/activate  # if using a virtualenv
 ```
 
-## Testing (Python Environment)
+## Usage
 
-If you want to run or contribute to the code in a Python environment, automated tests are provided in the `tests` directory.
-
-First, set up your virtual environment and install dependencies:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```sh
 pip install -r requirements.txt
+source .venv/bin/activate  # if using a virtualenv
+python cli.py doctor
 ```
 
-Then run the tests with:
+## Web UI
 
-```bash
-pytest tests/
+You can also review all health checks in your browser:
+
+
+# HCP Doctor
+
+HCP Doctor is a cross-platform diagnostics tool for HashiCorp Vault, Consul, and Nomad clusters. It works on Linux, macOS, and Windows (Python 3.7+ required).
+
+## Features
+- Health checks for Vault, Consul, Nomad
+- Cluster membership, inventory, backup, quotas, network, security
+- System resource usage per node (where possible)
+- CLI and Web UI
+- Pretty, colorized output
+
+
+
+## Prerequisites
+
+- Python 3.7 or newer must be installed on your system (Linux, macOS, or Windows).
+- Internet access to install dependencies via pip.
+- Access to your Vault, Consul, and Nomad cluster endpoints.
+
+## Environment Variables & CLI Arguments
+
+You can configure the tool using environment variables or CLI arguments. These are required for the tool to connect to your clusters:
+
+- `VAULT_ADDR` and `VAULT_TOKEN` (Vault address and token)
+- `CONSUL_HTTP_ADDR` and `CONSUL_HTTP_TOKEN` (Consul address and token)
+- `NOMAD_ADDR` and `NOMAD_TOKEN` (Nomad address and token)
+
+You can set these in your shell before running the tool:
+
+```sh
+export VAULT_ADDR=http://your-vault:8200
+export VAULT_TOKEN=your-root-token
+export CONSUL_HTTP_ADDR=https://your-consul:8501
+export CONSUL_HTTP_TOKEN=your-consul-token
+export NOMAD_ADDR=http://your-nomad:4646
+export NOMAD_TOKEN=your-nomad-token
 ```
 
-You should see output like:
+Or pass them as CLI arguments (where supported):
 
+```sh
+hcp-doctor doctor --vault-addr=http://your-vault:8200 --vault-token=your-root-token --consul-addr=https://your-consul:8501 --consul-token=your-consul-token --nomad-addr=http://your-nomad:4646 --nomad-token=your-nomad-token
 ```
-================================= test session starts ==================================
-platform darwin -- Python 3.13.5, pytest-8.4.2, pluggy-1.6.0
-rootdir: /path/to/hcp-doctor-fresh
-collected 12 items
 
-tests/test_cli.py .....                                                          [ 41%]
-tests/test_web.py .......                                                        [100%]
+### 1. Clone the repository
 
-============================ 12 passed in 77.26s (0:01:17) =============================
+```sh
+git clone https://github.com/himanshu8693/hcp-doctor.git
+cd hcp-doctor
 ```
+
+### 2. (Recommended) Create a virtual environment
+
+```sh
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+```
+
+### 3. Install dependencies and the tool
+
+```sh
+pip install .
+```
+
+Or, after publishing to PyPI:
+
+```sh
+pip install hcp-doctor
+```
+
+
 ## Usage
 
 
