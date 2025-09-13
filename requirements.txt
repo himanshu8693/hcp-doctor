@@ -1,0 +1,9 @@
+click
+flask
+hvac
+python-consul
+python-nomad
+psutil
+requests
+fpdf2
+pytest

@@ -1,0 +1,74 @@
+# GitHub Actions workflow to build and upload standalone binaries for macOS, Linux, and Windows
+# to the Releases page automatically on tag push.
+
+name: Build and Release Binaries
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build binary
+        run: |
+          pyinstaller --onefile -n hcp-doctor -p hashicorp_doctor hashicorp_doctor/cli.py
+
+      - name: Rename binary for platform
+        run: |
+          if [[ "${{ runner.os }}" == "Linux" ]]; then
+            mv dist/hcp-doctor hcp-doctor-linux
+          elif [[ "${{ runner.os }}" == "macOS" ]]; then
+            mv dist/hcp-doctor hcp-doctor-mac
+          elif [[ "${{ runner.os }}" == "Windows" ]]; then
+            mv dist/hcp-doctor.exe hcp-doctor-win.exe
+          fi
+        shell: bash
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hcp-doctor-${{ runner.os }}
+          path: |
+            hcp-doctor-linux
+            hcp-doctor-mac
+            hcp-doctor-win.exe
+        if: always()
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ./artifacts/**/hcp-doctor-linux
+            ./artifacts/**/hcp-doctor-mac
+            ./artifacts/**/hcp-doctor-win.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
