@@ -3,8 +3,8 @@ import json
 import os
 
 from hashicorp_doctor.vault.diagnostics import run_vault_diagnostics
-from hashicorp_doctor.consul.diagnostics import run_consul_diagnostics
-from hashicorp_doctor.nomad.diagnostics import run_nomad_diagnostics
+from hashicorp_doctor.consul_diag.diagnostics import run_consul_diagnostics
+from hashicorp_doctor.nomad_diag.diagnostics import run_nomad_diagnostics
 from hashicorp_doctor.utils import get_section_state
 
 def print_section(title, data, pdf=None):
