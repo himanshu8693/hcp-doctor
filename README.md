@@ -52,6 +52,37 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+## Testing (Python Environment)
+
+If you want to run or contribute to the code in a Python environment, automated tests are provided in the `tests` directory.
+
+First, set up your virtual environment and install dependencies:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Then run the tests with:
+
+```bash
+pytest tests/
+```
+
+You should see output like:
+
+```
+================================= test session starts ==================================
+platform darwin -- Python 3.13.5, pytest-8.4.2, pluggy-1.6.0
+rootdir: /path/to/hcp-doctor-fresh
+collected 12 items
+
+tests/test_cli.py .....                                                          [ 41%]
+tests/test_web.py .......                                                        [100%]
+
+============================ 12 passed in 77.26s (0:01:17) =============================
+```
 ## Usage
 
 
