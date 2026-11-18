@@ -1,6 +1,10 @@
 # HCP Doctor
 
-HCP Doctor is a cross-platform diagnostics tool for HashiCorp Vault, Consul, and Nomad clusters. It works on Linux, macOS, and Windows (Python 3.7+ required).
+Cross-platform diagnostics for HashiCorp Vault, Consul, and Nomad clusters, with CLI, web UI, and HTML reporting. Works on Linux, macOS, and Windows (Python 3.7+ required).
+
+**Role alignment:** DevOps Engineer · Platform Engineer · SRE · Solutions Engineer · FDE
+
+> **Credential safety:** Use least-privilege, short-lived credentials. The placeholder values below are examples only. Do not use root tokens or disable TLS verification in production; the skip-verify options are for isolated local testing only.
 
 ---
 
@@ -19,11 +23,11 @@ HCP Doctor is a cross-platform diagnostics tool for HashiCorp Vault, Consul, and
 3. **Set environment variables for cluster access (or pass as CLI args):**
    ```sh
    export VAULT_ADDR=http://your-vault:8200
-   export VAULT_TOKEN=your-root-token
+   export VAULT_TOKEN=<least-privilege-short-lived-token>
    export CONSUL_HTTP_ADDR=https://your-consul:8501
-   export CONSUL_HTTP_TOKEN=your-consul-token
+   export CONSUL_HTTP_TOKEN=<least-privilege-short-lived-token>
    export NOMAD_ADDR=http://your-nomad:4646
-   export NOMAD_TOKEN=your-nomad-token
+   export NOMAD_TOKEN=<least-privilege-short-lived-token>
    ```
 
 4. **Run diagnostics:**
